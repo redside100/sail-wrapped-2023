@@ -16,6 +16,7 @@ import Stats from "./pages/Stats";
 import Leaderboards from "./pages/Leaderboards";
 import { Sailing } from "@mui/icons-material";
 import Debug from "./pages/Debug";
+import Trends from "./pages/Trends";
 
 const MainView = ({ onLogout }) => {
   const userState = useContext(UserContext);
@@ -87,6 +88,11 @@ const MainView = ({ onLogout }) => {
                     <Typography variant="h5">Leaderboards</Typography>
                   </Button>
                 </Link>
+                <Link to="/trends">
+                  <Button variant="primary">
+                    <Typography variant="h5">Trends</Typography>
+                  </Button>
+                </Link>
                 <Link to="/debug">
                   <Button variant="primary">
                     <Typography variant="h5">Debug</Typography>
@@ -112,6 +118,7 @@ const MainView = ({ onLogout }) => {
         <Route exact path="/" element={<Home />} />
         <Route exact path="/stats" element={<Stats />} />
         <Route exact path="/leaderboards" element={<Leaderboards />} />
+        <Route exact path="/trends" element={<Trends />} />
         <Route exact path="/debug" element={<Debug />} />
       </Routes>
     </>

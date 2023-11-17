@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useEffect, useState, createContext } from "react";
 import MainView from "./MainView";
 import { getInfo, login, logout, refreshToken } from "./api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
+import Particles from "react-particles";
+import { loadSlim } from "tsparticles-slim";
 
 export const UserContext = createContext();
 
@@ -69,7 +71,7 @@ const App = () => {
               isLoading: false,
             });
             toast.error(res.reason, {
-              position: toast.POSITION.TOP_RIGHT,
+              position: toast.POSITION.BOTTOM_RIGHT,
             });
           }
         }
@@ -97,7 +99,7 @@ const App = () => {
           localStorage.setItem("access_token", res.access_token);
           localStorage.setItem("refresh_token", res.refresh_token);
           toast.success(`Logged in as ${res.user?.global_name}`, {
-            position: toast.POSITION.TOP_RIGHT,
+            position: toast.POSITION.BOTTOM_RIGHT,
           });
         } else {
           setUserState({
@@ -105,7 +107,7 @@ const App = () => {
             isLoading: false,
           });
           toast.error(res.reason, {
-            position: toast.POSITION.TOP_RIGHT,
+            position: toast.POSITION.BOTTOM_RIGHT,
           });
         }
       }
@@ -126,11 +128,61 @@ const App = () => {
     });
   };
 
+  const particlesInit = useCallback(async (engine) => {
+    await loadSlim(engine);
+  }, []);
+
   return (
     <UserContext.Provider value={userState}>
       <ThemeProvider theme={darkTheme}>
         <ToastContainer />
         <CssBaseline />
+        <Particles
+          id="particles"
+          init={particlesInit}
+          options={{
+            particles: {
+              number: {
+                value: 400,
+                density: {
+                  enable: true,
+                },
+              },
+              color: {
+                value: "#fff",
+              },
+              shape: {
+                type: "circle",
+              },
+              opacity: {
+                value: 0.2,
+              },
+              size: {
+                value: 5,
+              },
+              move: {
+                enable: true,
+                speed: 1.5,
+                direction: "bottom",
+                straight: true,
+              },
+              wobble: {
+                enable: true,
+                distance: 15,
+                speed: 15,
+              },
+              zIndex: {
+                value: {
+                  min: 0,
+                  max: 100,
+                },
+                opacityRate: 10,
+                sizeRate: 10,
+                velocityRate: 10,
+              },
+            },
+          }}
+        />
         <MainView onLogout={onLogout} />
       </ThemeProvider>
     </UserContext.Provider>

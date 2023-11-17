@@ -161,3 +161,4 @@ cython_debug/
 data/*
 compiled-data/*
 backend/client_secret
+backend/*.db
