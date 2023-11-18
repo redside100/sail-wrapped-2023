@@ -72,7 +72,7 @@ const TrendChart = ({ trendData, trendName }) => {
         <Typography variant="h5">
           Historical usage of &quot;{trendName}&quot;
         </Typography>
-        <Line options={CHART_OPTIONS} data={data} />
+        <Line options={CHART_OPTIONS} data={data} style={{ zIndex: 1 }}/>
       </Box>
     </animated.div>
   );

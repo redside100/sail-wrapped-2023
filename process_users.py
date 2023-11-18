@@ -49,6 +49,9 @@ for i, row in enumerate(all_messages):
     mentions = orjson.loads(row[7])
     total_reactions = row[8]
 
+    if user_name == 'Deleted User':
+        continue
+    
     init_user_if_not_exists(user_id, user_name, user_avatar_url)
 
     user_cache[user_id]["messages"] += 1
@@ -68,6 +71,8 @@ for i, row in enumerate(all_messages):
             reactor_id = int(user["id"])
             reactor_name = user["name"]
             reactor_avatar_url = user["avatarUrl"]
+            if reactor_name == 'Deleted User':
+                continue
             init_user_if_not_exists(reactor_id, reactor_name, reactor_avatar_url)
             user_cache[reactor_id]["reactions_given"] += 1
 
@@ -78,6 +83,8 @@ for i, row in enumerate(all_messages):
         mentioned_id = int(mention["id"])
         mentioned_name = mention["name"]
         mentioned_avatar_url = mention["avatarUrl"]
+        if mentioned_name == 'Deleted User':
+            continue
         init_user_if_not_exists(mentioned_id, mentioned_name, mentioned_avatar_url)
 
         if mentioned_id not in user_cache[user_id]["mentions_given"]:
