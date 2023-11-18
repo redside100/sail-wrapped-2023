@@ -25,7 +25,7 @@ export const logout = async (token) => {
 
 export const getInfo = async (token) => {
     const res = await fetch(`${API_BASE}/api/info`, {
-        method: 'POST',
+        method: 'GET',
         headers: {
           token
         }
@@ -52,3 +52,17 @@ export const refreshToken = async (refreshToken) => {
     });
     return res.json();
 }
+
+export const getTrendData = async (word, token) => {
+    const res = await fetch(`${API_BASE}/api/trends`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Token': token,
+        },
+        body: JSON.stringify({
+            word
+        })
+    });
+    return res.json();
+};

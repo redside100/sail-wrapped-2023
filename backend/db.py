@@ -45,7 +45,7 @@ def get_trend_data_for_word(word: str):
         conn.cursor()
         .execute(
             "SELECT timestamps FROM words WHERE word = ?",
-            (word,),
+            (word.lower(),),
         )
         .fetchone()
     )

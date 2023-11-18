@@ -1,6 +1,7 @@
 from flask import Flask, request
 from flask_cors import CORS
 import requests
+from util import check_for_bad_words
 import db
 
 app = Flask(__name__)
@@ -88,7 +89,7 @@ def logout():
         return {"status": "not ok", "reason": "Unable to revoke token from Discord."}
 
 
-@app.route("/api/info", methods=["POST"])
+@app.route("/api/info", methods=["GET"])
 def get_info():
     try:
         token = request.headers.get("token")
@@ -114,7 +115,44 @@ def get_random_media():
             **media,
         }
     except Exception as e:
-        print(e)
+        return {"status": "not ok", "reason": "Invalid token (possibly expired)"}
+
+
+@app.route("/api/trends", methods=["POST"])
+def get_trends_data():
+    try:
+        token = request.headers.get("token")
+        word = request.json.get("word")
+        if not token_check(token):
+            return {
+                "status": "not ok",
+                "reason": "You are not in the Sail Discord server.",
+            }
+
+        if len(word.split(" ")) > 1:
+            return {
+                "status": "not ok",
+                "reason": "Should only be one word",
+            }
+
+        if len(word) > 40:
+            return {
+                "status": "not ok",
+                "reason": "Word is too long",
+            }
+
+        if check_for_bad_words(word):
+            return {
+                "status": "not ok",
+                "reason": "Word contains banned search term",
+            }
+
+        trend_data = db.get_trend_data_for_word(word)
+        return {
+            "status": "ok",
+            "data": trend_data,
+        }
+    except Exception as e:
         return {"status": "not ok", "reason": "Invalid token (possibly expired)"}
 
 
