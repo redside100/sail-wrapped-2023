@@ -46,7 +46,7 @@ const Media = () => {
             <Typography color="red">
               Clicking the button below may show NSFW or offensive content.
             </Typography>
-            <Button variant="contained" sx={{ width: 200 }} onClick={rollImage}>
+            <Button variant="contained" sx={{ width: 200 }} onClick={rollImage} disabled={loadingImage}>
               Roll Random Media
             </Button>
           </Box>
