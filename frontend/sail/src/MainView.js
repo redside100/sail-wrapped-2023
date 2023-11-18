@@ -17,87 +17,109 @@ import Leaderboards from "./pages/Leaderboards";
 import { Sailing } from "@mui/icons-material";
 import Debug from "./pages/Debug";
 import Trends from "./pages/Trends";
+import Me from "./pages/Me";
+import { useSpring, animated } from "@react-spring/web";
 
 const MainView = ({ onLogout }) => {
   const userState = useContext(UserContext);
+  const styles = useSpring({
+    from: { opacity: "0" },
+    to: { opacity: "1" },
+  });
 
   if (userState.isLoading) {
     return (
-      <Box
-        display="flex"
-        position="absolute"
-        p={3}
-        height="100%"
-        width="100%"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <CircularProgress />
-      </Box>
+      <animated.div style={styles}>
+        <Box
+          display="flex"
+          position="absolute"
+          p={3}
+          height="100%"
+          width="100%"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <CircularProgress />
+        </Box>
+      </animated.div>
     );
   }
 
   if (!Boolean(userState.loggedIn)) {
     return (
-      <Box
-        display="flex"
-        position="absolute"
-        p={3}
-        height="100%"
-        width="100%"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
-          <Sailing sx={{ fontSize: 80 }} />
-          <Typography variant="h3">Sail Wrapped 2023</Typography>
-          <Button
-            variant="contained"
-            onClick={() => {
-              window.location = AUTH_URL;
-            }}
+      <animated.div style={styles}>
+        <Box
+          display="flex"
+          position="absolute"
+          p={3}
+          height="100%"
+          width="100%"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            gap={2}
           >
-            Login with Discord
-          </Button>
+            <Sailing sx={{ fontSize: 80 }} />
+            <Typography variant="h3">Sail Wrapped 2023</Typography>
+            <Button
+              variant="contained"
+              onClick={() => {
+                window.location = AUTH_URL;
+              }}
+            >
+              Login with Discord
+            </Button>
+          </Box>
         </Box>
-      </Box>
+      </animated.div>
     );
   }
 
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="sticky">
         <Toolbar>
           <Box display="flex" justifyContent="space-between" width="100%">
-            <Box display="flex">
-              <Sailing sx={{ fontSize: 40, mr: 1 }} />
-              <Typography variant="h4">Sail Wrapped 2023</Typography>
+            <Box display="flex" alignItems="center">
+              <Sailing sx={{ fontSize: 32, mr: 1 }} />
+              <Typography variant="h5">Sail Wrapped 2023</Typography>
               <Box display="flex" alignItems="center" ml={2}>
                 <Link to="/">
                   <Button variant="primary">
-                    <Typography variant="h5">Home</Typography>
+                    <Typography fontSize={20}>Home</Typography>
                   </Button>
                 </Link>
                 <Link to="/stats">
                   <Button variant="primary">
-                    <Typography variant="h5">Stats</Typography>
+                    <Typography fontSize={20}>Stats</Typography>
                   </Button>
                 </Link>
                 <Link to="/leaderboards">
                   <Button variant="primary">
-                    <Typography variant="h5">Leaderboards</Typography>
+                    <Typography fontSize={20}>Leaderboards</Typography>
                   </Button>
                 </Link>
                 <Link to="/trends">
                   <Button variant="primary">
-                    <Typography variant="h5">Trends</Typography>
+                    <Typography fontSize={20}>Trends</Typography>
                   </Button>
                 </Link>
-                <Link to="/debug">
+                <Link to="/me">
                   <Button variant="primary">
-                    <Typography variant="h5">Debug</Typography>
+                    <Typography fontSize={20}>
+                      Me ({userState.user?.global_name})
+                    </Typography>
                   </Button>
                 </Link>
+                {/* <Link to="/debug">
+                  <Button variant="primary">
+                    <Typography fontSize={20}>Debug</Typography>
+                  </Button>
+                </Link> */}
               </Box>
             </Box>
             <Box display="flex" gap={2} alignItems="center">
@@ -119,7 +141,8 @@ const MainView = ({ onLogout }) => {
         <Route exact path="/stats" element={<Stats />} />
         <Route exact path="/leaderboards" element={<Leaderboards />} />
         <Route exact path="/trends" element={<Trends />} />
-        <Route exact path="/debug" element={<Debug />} />
+        <Route exact path="/me" element={<Me />} />
+        {/* <Route exact path="/debug" element={<Debug />} /> */}
       </Routes>
     </>
   );

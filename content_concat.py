@@ -2,7 +2,11 @@ import sqlite3
 import orjson
 
 conn = sqlite3.connect("compiled-data/messages.db")
-all_messages = conn.cursor().execute("SELECT content, timestamp FROM messages ORDER BY timestamp ASC").fetchall()
+all_messages = (
+    conn.cursor()
+    .execute("SELECT content, timestamp FROM messages ORDER BY timestamp ASC")
+    .fetchall()
+)
 count = len(all_messages)
 
 word_cache = {}
@@ -21,16 +25,16 @@ for i, row in enumerate(all_messages):
             continue
         word = word.lower()
         if word not in word_cache:
-            word_cache[word] = {
-                'count': 1,
-                'timestamps': [timestamp]
-            }
+            word_cache[word] = {"count": 1, "timestamps": [timestamp]}
         else:
-            word_cache[word]['count'] += 1
-            word_cache[word]['timestamps'].append(timestamp)
+            word_cache[word]["count"] += 1
+            word_cache[word]["timestamps"].append(timestamp)
 
-print('writing')
+print("writing")
 for word in word_cache:
-    conn.cursor().execute("INSERT OR REPLACE INTO words (word, count, timestamps) VALUES (?, ?, ?)", (word, word_cache[word]['count'], orjson.dumps(word_cache[word]['timestamps'])))
+    conn.cursor().execute(
+        "INSERT OR REPLACE INTO words (word, count, timestamps) VALUES (?, ?, ?)",
+        (word, word_cache[word]["count"], orjson.dumps(word_cache[word]["timestamps"])),
+    )
 
 conn.commit()
