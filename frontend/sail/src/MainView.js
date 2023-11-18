@@ -19,6 +19,7 @@ import Debug from "./pages/Debug";
 import Trends from "./pages/Trends";
 import Me from "./pages/Me";
 import { useSpring, animated } from "@react-spring/web";
+import Media from "./pages/Media";
 
 const MainView = ({ onLogout }) => {
   const userState = useContext(UserContext);
@@ -39,7 +40,16 @@ const MainView = ({ onLogout }) => {
           justifyContent="center"
           alignItems="center"
         >
-          <CircularProgress />
+          <Box
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+            alignItems="center"
+            gap={1}
+          >
+            <CircularProgress size={30} />
+            <Typography>Loading data...</Typography>
+          </Box>
         </Box>
       </animated.div>
     );
@@ -108,6 +118,11 @@ const MainView = ({ onLogout }) => {
                     <Typography fontSize={20}>Trends</Typography>
                   </Button>
                 </Link>
+                <Link to="/media">
+                  <Button variant="primary">
+                    <Typography fontSize={20}>Media</Typography>
+                  </Button>
+                </Link>
                 <Link to="/me">
                   <Button variant="primary">
                     <Typography fontSize={20}>
@@ -141,6 +156,7 @@ const MainView = ({ onLogout }) => {
         <Route exact path="/stats" element={<Stats />} />
         <Route exact path="/leaderboards" element={<Leaderboards />} />
         <Route exact path="/trends" element={<Trends />} />
+        <Route exact path="/media" element={<Media />} />
         <Route exact path="/me" element={<Me />} />
         {/* <Route exact path="/debug" element={<Debug />} /> */}
       </Routes>

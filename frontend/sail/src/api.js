@@ -33,6 +33,16 @@ export const getInfo = async (token) => {
     return res.json();
 }
 
+export const getRandomMedia = async (token) => {
+    const res = await fetch(`${API_BASE}/api/media/random`, {
+        method: 'GET',
+        headers: {
+          token
+        }
+    });
+    return res.json();
+}
+
 export const refreshToken = async (refreshToken) => {
     const res = await fetch(`${API_BASE}/api/refresh`, {
         method: 'POST',

@@ -24,6 +24,8 @@ def get_leaderboard_for_word(word: str):
         )
         .fetchall()
     )
+    if rows is None:
+        return []
     data = [
         {
             "author_id": row[0],
@@ -47,6 +49,9 @@ def get_trend_data_for_word(word: str):
         )
         .fetchone()
     )
+    if row is None:
+        return []
+    
     timestamps = orjson.loads(row[0])
     data = {}
     for timestamp in timestamps:
@@ -60,3 +65,12 @@ def get_trend_data_for_word(word: str):
         'timestamp': k,
         'count': data[k],
     } for k in data]
+
+def get_random_media():
+    row = (
+        conn.cursor().execute("SELECT url, timestamp FROM media ORDER BY RANDOM() LIMIT 1").fetchone()
+    )
+    return {
+        'url': row[0],
+        'timestamp': row[1],
+    }
