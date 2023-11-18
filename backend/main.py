@@ -147,7 +147,7 @@ def get_trends_data():
                 "reason": "Word contains banned search term",
             }
 
-        trend_data = db.get_trend_data_for_word(word)
+        trend_data = db.get_trend_data_for_word(word.lower())
         return {
             "status": "ok",
             "data": trend_data,
