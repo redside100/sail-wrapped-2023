@@ -96,43 +96,43 @@ const MainView = ({ onLogout }) => {
           <Box display="flex" justifyContent="space-between" width="100%">
             <Box display="flex" alignItems="center">
               <Sailing sx={{ fontSize: 32, mr: 1 }} />
-              <Typography variant="h5">Sail Wrapped 2023</Typography>
+              <Typography noWrap variant="h5">Sail Wrapped 2023</Typography>
               <Box display="flex" alignItems="center" ml={2}>
                 <Link to="/">
                   <Button variant="primary">
-                    <Typography fontSize={20}>Home</Typography>
+                    <Typography noWrap fontSize={20}>Home</Typography>
                   </Button>
                 </Link>
                 <Link to="/stats">
                   <Button variant="primary">
-                    <Typography fontSize={20}>Stats</Typography>
+                    <Typography noWrap fontSize={20}>Stats</Typography>
                   </Button>
                 </Link>
                 <Link to="/leaderboards">
                   <Button variant="primary">
-                    <Typography fontSize={20}>Leaderboards</Typography>
+                    <Typography noWrap fontSize={20}>Leaderboards</Typography>
                   </Button>
                 </Link>
                 <Link to="/trends">
                   <Button variant="primary">
-                    <Typography fontSize={20}>Trends</Typography>
+                    <Typography noWrap fontSize={20}>Trends</Typography>
                   </Button>
                 </Link>
                 <Link to="/media">
                   <Button variant="primary">
-                    <Typography fontSize={20}>Media</Typography>
+                    <Typography noWrap fontSize={20}>Media</Typography>
                   </Button>
                 </Link>
                 <Link to="/me">
                   <Button variant="primary">
-                    <Typography fontSize={20}>
+                    <Typography noWrap fontSize={20}>
                       Me ({userState.user?.global_name})
                     </Typography>
                   </Button>
                 </Link>
                 {/* <Link to="/debug">
                   <Button variant="primary">
-                    <Typography fontSize={20}>Debug</Typography>
+                    <Typography noWrap fontSize={20}>Debug</Typography>
                   </Button>
                 </Link> */}
               </Box>
@@ -143,7 +143,7 @@ const MainView = ({ onLogout }) => {
                 src={`${DISCORD_CDN_BASE}/avatars/${userState.user?.id}/${userState.user?.avatar}.png?size=32`}
                 sx={{ borderRadius: "50%" }}
               />
-              <Typography>
+              <Typography noWrap>
                 Logged in as {userState.user?.global_name}
               </Typography>
               <Button onClick={onLogout}>Logout</Button>

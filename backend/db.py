@@ -68,7 +68,7 @@ def get_trend_data_for_word(word: str):
 
 def get_random_media():
     row = (
-        conn.cursor().execute("SELECT url, timestamp FROM media ORDER BY RANDOM() LIMIT 1").fetchone()
+        conn.cursor().execute("SELECT url, timestamp FROM media WHERE id IN (SELECT id FROM media ORDER BY RANDOM() LIMIT 1)").fetchone()
     )
     return {
         'url': row[0],
