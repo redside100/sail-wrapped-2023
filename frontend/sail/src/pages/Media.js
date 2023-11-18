@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Link, Typography } from "@mui/material";
 import { useSpring, animated } from "@react-spring/web";
 import { PermMedia } from "@mui/icons-material";
 import { getRandomMedia } from "../api";
@@ -83,6 +83,7 @@ const Media = () => {
                       boxShadow: "0px 0px 30px rgba(255, 255, 255, 0.4);",
                     }}
                   />
+                  <Link href={imageUrl} target="_blank" sx={{ mt: 1 }}>View original</Link>
                 </>
               )
             )}
