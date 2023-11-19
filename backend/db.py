@@ -114,28 +114,29 @@ def get_user_data(user_id):
     return {
         "has_data": True,
         "user_name": row[1],
-        "mentions_received": row[3],
-        "mentions_given": row[4],
-        "reactions_received": row[5],
-        "reactions_given": row[6],
-        "messages_sent": row[7],
-        "attachments_sent": row[8],
-        "attachments_size": row[9],
-        "most_frequent_time": row[10],
+        "user_nickname": row[2],
+        "mentions_received": row[4],
+        "mentions_given": row[5],
+        "reactions_received": row[6],
+        "reactions_given": row[7],
+        "messages_sent": row[8],
+        "attachments_sent": row[9],
+        "attachments_size": row[10],
+        "most_frequent_time": row[11],
         "most_mentioned_given": {
-            "name": row[11],
-            "id": row[13],
-            "avatar_url": row[15],
-            "count": row[17],
-        }
-        if row[13] != 0
-        else None,
-        "most_mentioned_received": {
             "name": row[12],
             "id": row[14],
             "avatar_url": row[16],
             "count": row[18],
         }
         if row[14] != 0
+        else None,
+        "most_mentioned_received": {
+            "name": row[13],
+            "id": row[15],
+            "avatar_url": row[17],
+            "count": row[19],
+        }
+        if row[15] != 0
         else None,
     }

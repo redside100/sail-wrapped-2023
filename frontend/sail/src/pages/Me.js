@@ -111,7 +111,7 @@ const Me = () => {
               <Grid item lg={4} xs={6}>
                 <BasicStatCard
                   Icon={Badge}
-                  name="Stored Username"
+                  name="Stored Nickname"
                   altValue={() => (
                     <Box
                       display="flex"
@@ -123,7 +123,7 @@ const Me = () => {
                           <Typography>Useful for searching mentions</Typography>
                         }
                       >
-                        <Link sx={{ fontSize: 37 }}>{meData?.user_name}</Link>
+                        <Link sx={{ fontSize: 37 }}>{meData?.user_nickname}</Link>
                       </Tooltip>
                     </Box>
                   )}
@@ -321,7 +321,7 @@ const Me = () => {
                           <Tooltip
                             title={
                               <Typography>
-                                Mentioned in{" "}
+                                Mentioned you in{" "}
                                 {meData?.most_mentioned_received?.count} of
                                 their messages
                               </Typography>

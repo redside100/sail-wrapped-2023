@@ -6,7 +6,7 @@ conn = sqlite3.connect("compiled-data/messages.db")
 all_messages = (
     conn.cursor()
     .execute(
-        "SELECT author_id, author_name, author_avatar_url, content, timestamp, attachments, reactions, mentions, total_reactions FROM messages ORDER BY timestamp ASC"
+        "SELECT author_id, author_name, author_nickname, author_avatar_url, content, timestamp, attachments, reactions, mentions, total_reactions FROM messages ORDER BY timestamp ASC"
     )
     .fetchall()
 )
@@ -18,12 +18,13 @@ print(f"Loaded all messages ({count})")
 print("Loading to memory")
 
 
-def init_user_if_not_exists(user_id, user_name, avatar_url):
+def init_user_if_not_exists(user_id, user_name, user_nickname, avatar_url):
     global user_cache
     if user_id not in user_cache:
         user_cache[user_id] = {
             "messages": 0,
             "name": user_name,
+            "nickname": user_nickname,
             "avatar_url": avatar_url,
             "msg_frequency": {},
             "reactions_given": 0,
@@ -41,18 +42,19 @@ for i, row in enumerate(all_messages):
 
     user_id = int(row[0])
     user_name = row[1]
-    user_avatar_url = row[2]
-    content = row[3]
-    timestamp = row[4]
-    attachments = orjson.loads(row[5])
-    reactions = orjson.loads(row[6])
-    mentions = orjson.loads(row[7])
-    total_reactions = row[8]
+    user_nickname = row[2]
+    user_avatar_url = row[3]
+    content = row[4]
+    timestamp = row[5]
+    attachments = orjson.loads(row[6])
+    reactions = orjson.loads(row[7])
+    mentions = orjson.loads(row[8])
+    total_reactions = row[9]
 
-    if user_name == 'Deleted User':
+    if user_name == "Deleted User":
         continue
-    
-    init_user_if_not_exists(user_id, user_name, user_avatar_url)
+
+    init_user_if_not_exists(user_id, user_name, user_nickname, user_avatar_url)
 
     user_cache[user_id]["messages"] += 1
 
@@ -70,10 +72,11 @@ for i, row in enumerate(all_messages):
                 continue
             reactor_id = int(user["id"])
             reactor_name = user["name"]
+            reactor_nickname = user["nickname"]
             reactor_avatar_url = user["avatarUrl"]
-            if reactor_name == 'Deleted User':
+            if reactor_name == "Deleted User":
                 continue
-            init_user_if_not_exists(reactor_id, reactor_name, reactor_avatar_url)
+            init_user_if_not_exists(reactor_id, reactor_name, reactor_nickname, reactor_avatar_url)
             user_cache[reactor_id]["reactions_given"] += 1
 
     for mention in mentions:
@@ -82,14 +85,16 @@ for i, row in enumerate(all_messages):
 
         mentioned_id = int(mention["id"])
         mentioned_name = mention["name"]
+        mentioned_nickname = mention["nickname"]
         mentioned_avatar_url = mention["avatarUrl"]
-        if mentioned_name == 'Deleted User':
+        if mentioned_name == "Deleted User":
             continue
-        init_user_if_not_exists(mentioned_id, mentioned_name, mentioned_avatar_url)
+        init_user_if_not_exists(mentioned_id, mentioned_name, mentioned_nickname, mentioned_avatar_url)
 
         if mentioned_id not in user_cache[user_id]["mentions_given"]:
             user_cache[user_id]["mentions_given"][mentioned_id] = {
                 "name": mentioned_name,
+                "nickname": mentioned_nickname,
                 "avatar_url": mentioned_avatar_url,
                 "count": 1,
             }
@@ -99,6 +104,7 @@ for i, row in enumerate(all_messages):
         if user_id not in user_cache[mentioned_id]["mentions_received"]:
             user_cache[mentioned_id]["mentions_received"][user_id] = {
                 "name": user_name,
+                "nickname": user_nickname,
                 "avatar_url": user_avatar_url,
                 "count": 1,
             }
@@ -114,6 +120,7 @@ print(f"Processing users ({len(user_cache)})")
 for user_id in user_cache:
     user = user_cache[user_id]
     user_name = user_cache[user_id]["name"]
+    user_nickname = user_cache[user_id]["nickname"]
     user_avatar_url = user_cache[user_id]["avatar_url"]
     mentions_received = user["mentions_received"]
     mentions_given = user["mentions_given"]
@@ -180,10 +187,11 @@ for user_id in user_cache:
     )
 
     conn.cursor().execute(
-        "INSERT OR REPLACE INTO users (user_id, user_name, user_avatar_url, mentions_received, mentions_given, reactions_received, reactions_given, messages_sent, attachments_sent, attachments_size, most_frequent_time, most_mentioned_given_name, most_mentioned_received_name, most_mentioned_given_id, most_mentioned_received_id, most_mentioned_given_avatar_url, most_mentioned_received_avatar_url, most_mentioned_given_count, most_mentioned_received_count) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT OR REPLACE INTO users (user_id, user_name, user_nickname, user_avatar_url, mentions_received, mentions_given, reactions_received, reactions_given, messages_sent, attachments_sent, attachments_size, most_frequent_time, most_mentioned_given_name, most_mentioned_received_name, most_mentioned_given_id, most_mentioned_received_id, most_mentioned_given_avatar_url, most_mentioned_received_avatar_url, most_mentioned_given_count, most_mentioned_received_count) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         (
             user_id,
             user_name,
+            user_nickname,
             user_avatar_url,
             mentions_received_count,
             mentions_given_count,

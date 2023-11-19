@@ -27,18 +27,11 @@ const Home = () => {
               A collection containing 7 years of Sail history.
             </Typography>
             <Typography color="lightgrey" mt={2}>
-              All message data collected between April 12, 2016 to November
-              15, 2023.
+              All message data collected between April 12, 2016 to November 15,
+              2023.
             </Typography>
             <Typography color="lightgrey">
-              Excludes{" "}
-              <Link
-                href="https://discord.com/channels/169611319501258753/653764929169522710"
-                target="_blank"
-              >
-                #waifu
-              </Link>{" "}
-              for obvious reasons.
+              Excludes <Link>#waifu</Link> for obvious reasons.
             </Typography>
           </Box>
         </Box>
