@@ -174,6 +174,25 @@ def get_stats():
     except Exception as e:
         return {"status": "not ok", "reason": "Invalid token (possibly expired)"}
 
+@app.route("/api/me", methods=["GET"])
+def get_me():
+    try:
+        token = request.headers.get("token")
+        # check if in sail
+        if not token_check(token):
+            return {
+                "status": "not ok",
+                "reason": "You are not in the Sail Discord server.",
+            }
+
+        user_id = int(get_token_info(token)['user']['id'])
+        user_info = db.get_user_data(user_id)
+        return {
+            "status": "ok",
+            "data": user_info,
+        }
+    except Exception as e:
+        return {"status": "not ok", "reason": "Invalid token (possibly expired)"}
 
 def exchange_code(code):
     data = {

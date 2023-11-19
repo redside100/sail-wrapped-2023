@@ -100,3 +100,42 @@ def get_random_media():
         "url": row[0],
         "timestamp": row[1],
     }
+
+
+@cachetools.func.ttl_cache(maxsize=1024, ttl=86400)
+def get_user_data(user_id):
+    row = (
+        conn.cursor()
+        .execute("SELECT * FROM users WHERE user_id = ?", (user_id,))
+        .fetchone()
+    )
+    if row is None:
+        return {"has_data": False}
+    return {
+        "has_data": True,
+        "user_name": row[1],
+        "mentions_received": row[3],
+        "mentions_given": row[4],
+        "reactions_received": row[5],
+        "reactions_given": row[6],
+        "messages_sent": row[7],
+        "attachments_sent": row[8],
+        "attachments_size": row[9],
+        "most_frequent_time": row[10],
+        "most_mentioned_given": {
+            "name": row[11],
+            "id": row[13],
+            "avatar_url": row[15],
+            "count": row[17],
+        }
+        if row[13] != 0
+        else None,
+        "most_mentioned_received": {
+            "name": row[12],
+            "id": row[14],
+            "avatar_url": row[16],
+            "count": row[18],
+        }
+        if row[14] != 0
+        else None,
+    }

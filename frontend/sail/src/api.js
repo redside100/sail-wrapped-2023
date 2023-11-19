@@ -76,3 +76,13 @@ export const getStats = async (token) => {
   });
   return res.json();
 };
+
+export const getMe = async (token) => {
+  const res = await fetch(`${API_BASE}/api/me`, {
+    method: "GET",
+    headers: {
+      token,
+    },
+  });
+  return res.json();
+};

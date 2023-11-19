@@ -174,7 +174,7 @@ const Stats = () => {
               <Grid item lg={6} xs={12}>
                 <BasicStatCard
                   Icon={Leaderboard}
-                  name="Top 3 Reactions"
+                  name="Top 3 Used Reactions"
                   altValue={() => (
                     <Box
                       display="flex"
@@ -211,7 +211,7 @@ const Stats = () => {
               <Grid item lg={6} xs={12}>
                 <BasicStatCard
                   Icon={Leaderboard}
-                  name="Top 3 Channels"
+                  name="Top 3 Used Channels"
                   altValue={() => (
                     <Box
                       display="flex"
