@@ -13,6 +13,24 @@ def init():
 
 
 @cachetools.func.ttl_cache(maxsize=1024, ttl=86400)
+def get_stats():
+    rows = conn.cursor().execute("SELECT key, value FROM constants").fetchall()
+    data = {}
+    for row in rows:
+        key = row[0]
+        if key.startswith("top_three"):
+            value = orjson.loads(row[1])
+        elif key == "average_messages_per_hour":
+            value = float(row[1])
+        else:
+            value = int(row[1])
+
+        data[key] = value
+
+    return data
+
+
+@cachetools.func.ttl_cache(maxsize=1024, ttl=86400)
 def get_leaderboard_for_word(word: str):
     word = word.replace("%", "\\%").replace("_", "\\_")
     word = "%" + word.lower() + "%"
@@ -51,7 +69,7 @@ def get_trend_data_for_word(word: str):
     )
     if row is None:
         return []
-    
+
     timestamps = orjson.loads(row[0])
     data = {}
     for timestamp in timestamps:
@@ -60,17 +78,25 @@ def get_trend_data_for_word(word: str):
             data[day_timestamp] = 1
         else:
             data[day_timestamp] += 1
-    
-    return [{
-        'timestamp': k,
-        'count': data[k],
-    } for k in data]
+
+    return [
+        {
+            "timestamp": k,
+            "count": data[k],
+        }
+        for k in data
+    ]
+
 
 def get_random_media():
     row = (
-        conn.cursor().execute("SELECT url, timestamp FROM media WHERE id IN (SELECT id FROM media ORDER BY RANDOM() LIMIT 1)").fetchone()
+        conn.cursor()
+        .execute(
+            "SELECT url, timestamp FROM media WHERE id IN (SELECT id FROM media ORDER BY RANDOM() LIMIT 1)"
+        )
+        .fetchone()
     )
     return {
-        'url': row[0],
-        'timestamp': row[1],
+        "url": row[0],
+        "timestamp": row[1],
     }

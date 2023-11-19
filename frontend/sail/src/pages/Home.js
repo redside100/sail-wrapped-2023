@@ -24,10 +24,13 @@ const Home = () => {
           <Typography variant="h3">Sail Wrapped 2023</Typography>
           <Box display="flex" flexDirection="column" alignItems="center">
             <Typography>
-              All message data was collected between April 12, 2016 to November 15,
-              2023.
+              A collection containing 7 years of Sail history.
             </Typography>
-            <Typography>
+            <Typography color="lightgrey" mt={2}>
+              All message data collected between April 12, 2016 to November
+              15, 2023.
+            </Typography>
+            <Typography color="lightgrey">
               Excludes{" "}
               <Link
                 href="https://discord.com/channels/169611319501258753/653764929169522710"

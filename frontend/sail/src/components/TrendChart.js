@@ -69,10 +69,13 @@ const TrendChart = ({ trendData, trendName }) => {
         height={500}
         alignItems="center"
       >
-        <Typography variant="h5">
-          Historical usage of &quot;{trendName}&quot;
-        </Typography>
-        <Line options={CHART_OPTIONS} data={data} style={{ zIndex: 1 }}/>
+        <Box display="flex" flexDirection="column" alignItems="center">
+          <Typography variant="h5">
+            Historical usage of &quot;{trendName}&quot;
+          </Typography>
+          <Typography color="lightgrey">Data grouped by start of week</Typography>
+        </Box>
+        <Line options={CHART_OPTIONS} data={data} style={{ zIndex: 1 }} />
       </Box>
     </animated.div>
   );

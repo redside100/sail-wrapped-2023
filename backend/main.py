@@ -156,6 +156,25 @@ def get_trends_data():
         return {"status": "not ok", "reason": "Invalid token (possibly expired)"}
 
 
+@app.route("/api/stats", methods=["GET"])
+def get_stats():
+    try:
+        token = request.headers.get("token")
+        # check if in sail
+        if not token_check(token):
+            return {
+                "status": "not ok",
+                "reason": "You are not in the Sail Discord server.",
+            }
+        stats = db.get_stats()
+        return {
+            "status": "ok",
+            "data": stats,
+        }
+    except Exception as e:
+        return {"status": "not ok", "reason": "Invalid token (possibly expired)"}
+
+
 def exchange_code(code):
     data = {
         "grant_type": "authorization_code",
