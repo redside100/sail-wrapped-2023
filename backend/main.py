@@ -1,3 +1,4 @@
+import logging
 from flask import Flask, request
 from flask_cors import CORS
 import requests
@@ -324,3 +325,7 @@ def refresh_token(refresh_token):
     )
     r.raise_for_status()
     return r.json()
+
+if __name__ == "__main__":
+    from waitress import serve
+    serve(app, host="0.0.0.0", port=5555)
