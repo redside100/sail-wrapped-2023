@@ -209,7 +209,7 @@ def get_leaderboard():
             if pattern is None or pattern == "":
                 return {"status": "not ok", "reason": "Need pattern"}
 
-            if len(pattern) > 40:
+            if len(pattern) > 60:
                 return {
                     "status": "not ok",
                     "reason": "Pattern is too long",

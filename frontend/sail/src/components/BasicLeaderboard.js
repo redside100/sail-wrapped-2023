@@ -127,9 +127,9 @@ const BasicLeaderboard = ({ tab }) => {
       });
       return;
     }
-    if (patternInput.length > 40) {
+    if (patternInput.length > 60) {
       setInputError(true);
-      toast.error("Pattern can be a maximum of 40 characters", {
+      toast.error("Pattern can be a maximum of 60 characters", {
         position: toast.POSITION.BOTTOM_RIGHT,
       });
       return;
