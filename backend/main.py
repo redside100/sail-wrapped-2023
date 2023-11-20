@@ -17,6 +17,8 @@ with open("client_secret", "r") as f:
 
 db.init()
 
+token_cache = set()
+
 
 def token_check(token):
     guild_ids = {guild["id"] for guild in get_guilds(token)}
@@ -45,6 +47,8 @@ def login():
                 "status": "not ok",
                 "reason": "You are not in the Sail Discord server.",
             }
+
+        token_cache.add(res["access_token"])
 
         return {
             "status": "ok",
@@ -76,6 +80,8 @@ def refresh():
             **info,
         }
     except Exception:
+        if token in token_cache:
+            token_cache.remove(token)
         return {"status": "not ok", "reason": "Unable to retrieve token from Discord."}
 
 
@@ -84,8 +90,12 @@ def logout():
     try:
         token = request.headers.get("token")
         revoke_access_token(token)
+        if token in token_cache:
+            token_cache.remove(token)
         return {"status": "ok"}
     except Exception:
+        if token in token_cache:
+            token_cache.remove(token)
         return {"status": "not ok", "reason": "Unable to revoke token from Discord."}
 
 
@@ -94,8 +104,13 @@ def get_info():
     try:
         token = request.headers.get("token")
         res = get_token_info(token)
+        if token not in token_cache:
+            token_cache.add(token)
+
         return {"status": "ok", **res}
     except Exception:
+        if token in token_cache:
+            token_cache.remove(token)
         return {"status": "not ok", "reason": "Invalid token (possibly expired)"}
 
 
@@ -103,11 +118,10 @@ def get_info():
 def get_random_media():
     try:
         token = request.headers.get("token")
-        # check if in sail
-        if not token_check(token):
+        if token not in token_cache:
             return {
                 "status": "not ok",
-                "reason": "You are not in the Sail Discord server.",
+                "reason": "Invalid token.",
             }
         media = db.get_random_media()
         return {
@@ -123,10 +137,16 @@ def get_trends_data():
     try:
         token = request.headers.get("token")
         word = request.json.get("word")
-        if not token_check(token):
+        if token not in token_cache:
             return {
                 "status": "not ok",
-                "reason": "You are not in the Sail Discord server.",
+                "reason": "Invalid token.",
+            }
+
+        if word is None or word == "":
+            return {
+                "status": "not ok",
+                "reason": "Need word",
             }
 
         if len(word.split(" ")) > 1:
@@ -156,15 +176,71 @@ def get_trends_data():
         return {"status": "not ok", "reason": "Invalid token (possibly expired)"}
 
 
+@app.route("/api/leaderboard", methods=["POST"])
+def get_leaderboard():
+    try:
+        token = request.headers.get("token")
+        leaderboard_type = request.json.get("type")
+        pattern = request.json.get("pattern")
+
+        if token not in token_cache:
+            return {
+                "status": "not ok",
+                "reason": "Invalid token.",
+            }
+        
+        valid_types = {
+            "mentions_received",
+            "mentions_given",
+            "reactions_received",
+            "reactions_given",
+            "messages_sent",
+            "attachments_size",
+            "pattern",
+        }
+
+        if leaderboard_type not in valid_types:
+            return {
+                "status": "not ok",
+                "reason": "Invalid type",
+            }
+
+        if leaderboard_type == "pattern":
+            if pattern is None or pattern == "":
+                return {"status": "not ok", "reason": "Need pattern"}
+
+            if len(pattern) > 40:
+                return {
+                    "status": "not ok",
+                    "reason": "Pattern is too long",
+                }
+
+            if check_for_bad_words(pattern):
+                return {
+                    "status": "not ok",
+                    "reason": "Pattern contains banned search term",
+                }
+
+            data = db.get_leaderboard_for_pattern(pattern)
+        else:
+            data = db.get_leaderboard(leaderboard_type)
+
+        return {
+            "status": "ok",
+            "data": data,
+        }
+    except Exception as e:
+        return {"status": "not ok", "reason": "Invalid token (possibly expired)"}
+
+
 @app.route("/api/stats", methods=["GET"])
 def get_stats():
     try:
         token = request.headers.get("token")
-        # check if in sail
-        if not token_check(token):
+        if token not in token_cache:
             return {
                 "status": "not ok",
-                "reason": "You are not in the Sail Discord server.",
+                "reason": "Invalid token.",
             }
         stats = db.get_stats()
         return {
@@ -174,18 +250,18 @@ def get_stats():
     except Exception as e:
         return {"status": "not ok", "reason": "Invalid token (possibly expired)"}
 
+
 @app.route("/api/me", methods=["GET"])
 def get_me():
     try:
         token = request.headers.get("token")
-        # check if in sail
-        if not token_check(token):
+        if token not in token_cache:
             return {
                 "status": "not ok",
-                "reason": "You are not in the Sail Discord server.",
+                "reason": "Invalid token.",
             }
 
-        user_id = int(get_token_info(token)['user']['id'])
+        user_id = int(get_token_info(token)["user"]["id"])
         user_info = db.get_user_data(user_id)
         return {
             "status": "ok",
@@ -193,6 +269,7 @@ def get_me():
         }
     except Exception as e:
         return {"status": "not ok", "reason": "Invalid token (possibly expired)"}
+
 
 def exchange_code(code):
     data = {

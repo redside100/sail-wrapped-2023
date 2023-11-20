@@ -5,3 +5,13 @@ export const AUTH_URL =
 
 export const API_BASE = process.env.NODE_ENV === "development" ? "http://localhost:5000" : "https://sailwrapped.com";
 export const DISCORD_CDN_BASE = "https://cdn.discordapp.com"
+
+export const LEADERBOARD_TAB = {
+  MESSAGES_SENT: "Messages Sent",
+  TOTAL_ATTACHMENTS_SIZE: "Total Attachments Size",
+  MENTIONS_RECEIVED: "Mentions Received",
+  MENTIONS_GIVEN: "Mentions Given",
+  REACTIONS_RECEIVED: "Reactions Received",
+  REACTIONS_GIVEN: "Reactions Given",
+  PATTERN: "Message Pattern",
+};

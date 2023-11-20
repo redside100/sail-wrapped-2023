@@ -86,3 +86,18 @@ export const getMe = async (token) => {
   });
   return res.json();
 };
+
+export const getLeaderboard = async (token, type, pattern = null) => {
+  const res = await fetch(`${API_BASE}/api/leaderboard`, {
+    method: "POST",
+    headers: {
+      token,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      type,
+      pattern,
+    })
+  });
+  return res.json();
+}

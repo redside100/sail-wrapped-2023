@@ -16,6 +16,7 @@ import {
 } from "@mui/icons-material";
 import BasicStatCard from "../components/BasicStatCard";
 import { getMe } from "../api";
+import { formatSize } from "../util";
 
 const Me = () => {
   const userState = useContext(UserContext);
@@ -54,20 +55,13 @@ const Me = () => {
     return `${meData?.most_frequent_time} AM UTC`;
   }, [meData]);
 
-  const attachmentSize = useMemo(() => {
-    if (meData?.attachments_size < 1000) {
-      return `${meData?.attachments_size} B`;
-    } else if (meData?.attachments_size < 1000000) {
-      return `${(meData?.attachments_size / 1000).toFixed(1)} KB`;
-    } else if (meData?.attachments_size < 1000000000) {
-      return `${(meData?.attachments_size / 1000000).toFixed(1)} MB`;
-    } else {
-      return `${(meData?.attachments_size / 1000000000).toFixed(1)} GB`;
-    }
-  }, [meData]);
+  const attachmentSize = useMemo(() => formatSize(meData?.attachments_size ?? 0), [meData]);
 
   const averageAttachmentSize = useMemo(() => {
-    const size = meData?.attachments_sent === 0 ? 0 : Math.round(meData?.attachments_size / meData?.attachments_sent);
+    const size =
+      meData?.attachments_sent === 0
+        ? 0
+        : Math.round(meData?.attachments_size / meData?.attachments_sent);
     if (size < 1000) {
       return `${size} B`;
     } else if (size < 1000000) {
@@ -123,7 +117,9 @@ const Me = () => {
                           <Typography>Useful for searching mentions</Typography>
                         }
                       >
-                        <Link sx={{ fontSize: 37 }}>{meData?.user_nickname}</Link>
+                        <Link sx={{ fontSize: 37 }}>
+                          {meData?.user_nickname}
+                        </Link>
                       </Tooltip>
                     </Box>
                   )}
@@ -178,7 +174,8 @@ const Me = () => {
                     meData?.reactions_given === 0
                       ? "Infinity"
                       : Math.round(
-                          (meData?.reactions_received / meData?.reactions_given) *
+                          (meData?.reactions_received /
+                            meData?.reactions_given) *
                             100
                         ) / 100
                   }
@@ -243,7 +240,9 @@ const Me = () => {
                               >
                                 <Box
                                   component="img"
-                                  src={meData?.most_mentioned_given?.avatar_url}
+                                  src={`https://cdn.discordapp.com/embed/avatars/${
+                                    meData?.most_mentioned_received?.id % 5
+                                  }.png`}
                                   height={40}
                                   width={40}
                                   sx={{
@@ -305,9 +304,9 @@ const Me = () => {
                               >
                                 <Box
                                   component="img"
-                                  src={
-                                    meData?.most_mentioned_received?.avatar_url
-                                  }
+                                  src={`https://cdn.discordapp.com/embed/avatars/${
+                                    meData?.most_mentioned_received?.id % 5
+                                  }.png`}
                                   height={40}
                                   width={40}
                                   sx={{

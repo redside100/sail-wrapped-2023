@@ -31,14 +31,14 @@ def get_stats():
 
 
 @cachetools.func.ttl_cache(maxsize=1024, ttl=86400)
-def get_leaderboard_for_word(word: str):
-    word = word.replace("%", "\\%").replace("_", "\\_")
-    word = "%" + word.lower() + "%"
+def get_leaderboard_for_pattern(pattern: str):
+    pattern = pattern.replace("%", "\\%").replace("_", "\\_")
+    pattern = "%" + pattern.lower() + "%"
     rows = (
         conn.cursor()
         .execute(
-            "SELECT author_id, author_name, author_avatar_url, count(author_name) FROM messages WHERE lower(content) LIKE ? ESCAPE '\\' GROUP BY author_name LIMIT 20",
-            (word,),
+            "SELECT author_id, author_name, author_avatar_url, count(author_name) FROM messages WHERE lower(content) LIKE ? ESCAPE '\\' AND NOT author_name = 'Deleted User' GROUP BY author_name ORDER BY count(author_name) DESC LIMIT 50",
+            (pattern,),
         )
         .fetchall()
     )
@@ -46,15 +46,33 @@ def get_leaderboard_for_word(word: str):
         return []
     data = [
         {
-            "author_id": row[0],
-            "author_name": row[1],
-            "author_avatar_url": row[2],
+            "id": row[0],
+            "name": row[1],
+            "avatar_url": row[2],
             "count": row[3],
         }
         for row in rows
     ]
-    data.sort(key=lambda x: x["count"], reverse=True)
     return data
+
+
+@cachetools.func.ttl_cache(maxsize=1024, ttl=86400)
+def get_leaderboard(column):
+    rows = (
+        conn.cursor()
+        .execute(
+            f"SELECT user_id, user_name, user_avatar_url, {column} FROM users ORDER BY {column} DESC LIMIT 50"
+        )
+        .fetchall()
+    )
+    if rows is None:
+        return []
+    return [{
+        "id": row[0],
+        "name": row[1],
+        "avatar_url": row[2],
+        "count": row[3],
+    } for row in rows]
 
 
 @cachetools.func.ttl_cache(maxsize=1024, ttl=86400)

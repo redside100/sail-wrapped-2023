@@ -18,6 +18,7 @@ import {
 } from "@mui/icons-material";
 import { getStats } from "../api";
 import BasicStatCard from "../components/BasicStatCard";
+import { formatSize } from "../util";
 
 const Stats = () => {
   const styles = useSpring({
@@ -141,9 +142,7 @@ const Stats = () => {
                 <BasicStatCard
                   Icon={Storage}
                   name="Total Attachments Size"
-                  value={`${(
-                    statsData?.total_attachments_size / 1000000000
-                  ).toFixed(1)} GB`}
+                  value={formatSize(statsData?.total_attachments_size ?? 0)}
                   loading={loadingStats}
                 />
               </Grid>
