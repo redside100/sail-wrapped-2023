@@ -144,7 +144,7 @@ const Me = () => {
               </Grid>
               <Grid item lg={4} xs={6}>
                 <BasicStatCard
-                  Icon={Inbox}
+                  Icon={Storage}
                   name="Avg. Attachment Size"
                   value={averageAttachmentSize}
                   loading={loadingMe}
