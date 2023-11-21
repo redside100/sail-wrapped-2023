@@ -16,11 +16,6 @@ CLIENT_ID = "1174821530623021128"
 CLIENT_SECRET = ""
 REDIRECT_URI = "http://localhost:3000"
 
-with open("client_secret", "r") as f:
-    CLIENT_SECRET = f.read()
-
-db.init()
-
 token_cache = set()
 
 
@@ -333,5 +328,9 @@ def refresh_token(refresh_token):
     return r.json()
 
 if __name__ == "__main__":
+    with open("client_secret", "r") as f:
+        CLIENT_SECRET = f.read()
+    db.init()
+
     from waitress import serve
     serve(app, host="0.0.0.0", port=5555)
