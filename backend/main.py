@@ -84,9 +84,10 @@ def refresh():
             **res,
             **info,
         }
-    except Exception:
+    except Exception as e:
         if token in token_cache:
             token_cache.remove(token)
+        logger.error(e)
         return {"status": "not ok", "reason": "Unable to retrieve token from Discord."}
 
 
@@ -98,9 +99,10 @@ def logout():
         if token in token_cache:
             token_cache.remove(token)
         return {"status": "ok"}
-    except Exception:
+    except Exception as e:
         if token in token_cache:
             token_cache.remove(token)
+        logger.error(e)
         return {"status": "not ok", "reason": "Unable to revoke token from Discord."}
 
 
