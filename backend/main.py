@@ -8,6 +8,9 @@ import db
 app = Flask(__name__)
 CORS(app)
 
+logger = logging.getLogger('waitress')
+logger.setLevel(logging.INFO)
+
 API_ENDPOINT = "https://discord.com/api/v10"
 CLIENT_ID = "1174821530623021128"
 CLIENT_SECRET = ""
@@ -56,7 +59,8 @@ def login():
             **res,
             **info,
         }
-    except Exception:
+    except Exception as e:
+        logger.error(e)
         return {"status": "not ok", "reason": "Unable to retrieve token from Discord."}
 
 
@@ -328,4 +332,4 @@ def refresh_token(refresh_token):
 
 if __name__ == "__main__":
     from waitress import serve
-    serve(app, host="0.0.0.0", port=5555)
+    serve(app, host="0.0.0.0", port=5000)
