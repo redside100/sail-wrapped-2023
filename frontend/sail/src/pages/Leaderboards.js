@@ -28,6 +28,9 @@ const Leaderboards = () => {
             sx={{
               mt: 2,
             }}
+            allowScrollButtonsMobile
+            scrollButtons={true}
+            variant="scrollable"
           >
             <Tab label={LEADERBOARD_TAB.MESSAGES_SENT} value={LEADERBOARD_TAB.MESSAGES_SENT} />
             <Tab

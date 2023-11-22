@@ -170,7 +170,7 @@ const Stats = () => {
                   loading={loadingStats}
                 />
               </Grid>
-              <Grid item lg={6} xs={12}>
+              <Grid item xl={6} xs={12}>
                 <BasicStatCard
                   Icon={Leaderboard}
                   name="Top 3 Used Reactions"
@@ -207,7 +207,7 @@ const Stats = () => {
                   loading={loadingStats}
                 />
               </Grid>
-              <Grid item lg={6} xs={12}>
+              <Grid item xl={6} xs={12}>
                 <BasicStatCard
                   Icon={Leaderboard}
                   name="Top 3 Used Channels"
