@@ -48,6 +48,8 @@ const Me = () => {
     loadMe();
   }, []);
 
+  console.log(meData);
+
   const mostFrequentHour = useMemo(() => {
     if (meData?.most_frequent_time > 12) {
       return `${meData?.most_frequent_time - 12} PM UTC`;
@@ -241,7 +243,7 @@ const Me = () => {
                                 <Box
                                   component="img"
                                   src={`https://cdn.discordapp.com/embed/avatars/${
-                                    meData?.most_mentioned_received?.id % 5
+                                    (meData?.most_mentioned_given?.id?.slice(-1) ?? 0) % 5
                                   }.png`}
                                   height={40}
                                   width={40}
@@ -305,7 +307,7 @@ const Me = () => {
                                 <Box
                                   component="img"
                                   src={`https://cdn.discordapp.com/embed/avatars/${
-                                    meData?.most_mentioned_received?.id % 5
+                                    (meData?.most_mentioned_received?.id?.slice(-1) ?? 0) % 5
                                   }.png`}
                                   height={40}
                                   width={40}

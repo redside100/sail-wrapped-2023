@@ -94,7 +94,7 @@ const BasicLeaderboard = ({ tab }) => {
                 <Box
                   component="img"
                   src={`https://cdn.discordapp.com/embed/avatars/${
-                    value.id % 5
+                    (value.id.slice(-1) ?? 0) % 5
                   }.png`}
                   height={32}
                   width={32}

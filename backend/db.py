@@ -46,7 +46,7 @@ def get_leaderboard_for_pattern(pattern: str):
         return []
     data = [
         {
-            "id": row[0],
+            "id": str(row[0]),
             "name": row[1],
             "avatar_url": row[2],
             "count": row[3],
@@ -68,7 +68,7 @@ def get_leaderboard(column):
     if rows is None:
         return []
     return [{
-        "id": row[0],
+        "id": str(row[0]),
         "name": row[1],
         "avatar_url": row[2],
         "count": row[3],
@@ -143,7 +143,7 @@ def get_user_data(user_id):
         "most_frequent_time": row[11],
         "most_mentioned_given": {
             "name": row[12],
-            "id": row[14],
+            "id": str(row[14]),
             "avatar_url": row[16],
             "count": row[18],
         }
@@ -151,7 +151,7 @@ def get_user_data(user_id):
         else None,
         "most_mentioned_received": {
             "name": row[13],
-            "id": row[15],
+            "id": str(row[15]),
             "avatar_url": row[17],
             "count": row[19],
         }
