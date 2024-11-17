@@ -15,7 +15,7 @@ logger.setLevel(logging.INFO)
 API_ENDPOINT = "https://discord.com/api/v10"
 CLIENT_ID = "1174821530623021128"
 CLIENT_SECRET = ""
-REDIRECT_URI = "https://sailwrapped.com" if os.environ.get('ENV', 'local') == 'production' else "http://localhost:3000"
+REDIRECT_URI = "https://sw2023.redside.moe" if os.environ.get('ENV', 'local') == 'production' else "http://localhost:3000"
 
 with open("client_secret", "r") as f:
     CLIENT_SECRET = f.read()
